@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   backend:
@@ -8,5 +8,5 @@ services:
       - ./core/app/
     ports:
       - "8000:8000"
-    # requirements:
-    #   - ./.env.dev
+    #  requirements:
+    #    - ./.env.dev
