@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     "blog.apps.BlogConfig",
     'rest_framework',
+    
 
 ]
 
@@ -133,3 +134,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #user manager config
 AUTH_USER_MODEL = 'accounts.User'
+
+#Setting the permission policy
+'''
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+'''
