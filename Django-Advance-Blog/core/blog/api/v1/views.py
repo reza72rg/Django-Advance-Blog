@@ -6,10 +6,28 @@ from blog.models import Post
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
- 
+from rest_framework.generics import GenericAPIView, ListAPIView \
+    , ListCreateAPIView,RetrieveAPIView,RetrieveUpdateAPIView \
+       , RetrieveUpdateDestroyAPIView
+from rest_framework import mixins
+
+class PostList(ListCreateAPIView):
+    queryset = Post.objects.filter(status=True)
+    permission_classes =[IsAuthenticated]
+    serializer_class = Postserializers
     
-''' 
+
+
+'''class PostList(GenericAPIView,mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = Post.objects.filter(status=True)
+    permission_classes =[IsAuthenticated]
+    serializer_class = Postserializers
+    
+    def get(self,request,*args,**kwargs):
+        return self.list(request, *args, **kwargs)
+    def post(self,request,*args,**kwargs):
+        return self.create(request, *args, **kwargs)
+ 
 class PostList(APIView):
     permission_classes =[IsAuthenticated]
     serializer_class = Postserializers
@@ -21,7 +39,46 @@ class PostList(APIView):
         serializer = Postserializers(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()        
-        return Response(serializer.data)'''
+        return Response(serializer.data)
+        
+@api_view(["GET","POST"])  
+@permission_classes([IsAuthenticatedOrReadOnly]) 
+def PostList(request):
+    if request.method =="GET":
+        posts = Post.objects.filter(status=True)
+        serializer = Postserializers(posts,many=True)
+        return Response(serializer.data)
+    elif request.method =="POST":
+        serializer = Postserializers(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()        
+        return Response(serializer.data)
+  
+'''
+class PostDetail(RetrieveUpdateDestroyAPIView):
+    permission_classes =[IsAuthenticated]
+    serializer_class = Postserializers
+    queryset = Post.objects.filter(status=True)
+    #lookup_field = 'id'
+    
+ 
+    
+    
+'''  
+class PostDetail(GenericAPIView,mixins.RetrieveModelMixin,
+                 mixins.UpdateModelMixin,mixins.DestroyModelMixin):
+    permission_classes =[IsAuthenticated]
+    serializer_class = Postserializers
+    queryset = Post.objects.filter(status=True)
+    #lookup_field = 'id'
+    
+    def get(self,request,*args, **kwargs):
+        return self.retrieve(request,*args, **kwargs)
+    def put(self,request,*args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    def delete(self,request,*args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+        
 class PostDetail(APIView):
     permission_classes =[IsAuthenticated]
     serializer_class = Postserializers
@@ -40,21 +97,7 @@ class PostDetail(APIView):
     def delete(self,request,*args, **kwargs):
         self.instance_post.delete()
         return Response({'detail':"Item removed successfully"},status=status.HTTP_204_NO_CONTENT)
-
-'''   
-@api_view(["GET","POST"])  
-@permission_classes([IsAuthenticatedOrReadOnly]) 
-def PostList(request):
-    if request.method =="GET":
-        posts = Post.objects.filter(status=True)
-        serializer = Postserializers(posts,many=True)
-        return Response(serializer.data)
-    elif request.method =="POST":
-        serializer = Postserializers(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()        
-        return Response(serializer.data)
-  
+        
 @api_view(["GET","PUT","DELETE"])    
 def PostDetail(request,id):
     post = get_object_or_404(Post,pk=id,status=True)
