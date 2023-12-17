@@ -12,13 +12,15 @@ from rest_framework.generics import GenericAPIView, ListAPIView \
 from rest_framework import mixins
 from rest_framework import viewsets
 from .permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class PostListModuleSet(viewsets.ModelViewSet):
     permission_classes =[IsAuthenticated,IsOwnerOrReadOnly]
     serializer_class = Postserializers
     queryset = Post.objects.filter(status=True)
-    
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'author','status']
 class CategoryListModuleSet(viewsets.ModelViewSet):
     permission_classes =[IsAuthenticated]
     serializer_class = Categoryserializers
