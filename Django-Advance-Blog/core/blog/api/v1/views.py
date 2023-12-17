@@ -12,17 +12,24 @@ from rest_framework.generics import GenericAPIView, ListAPIView \
 from rest_framework import mixins
 from rest_framework import viewsets
 from .permissions import IsOwnerOrReadOnly
+from .pagination import CustomPagination
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class PostListModuleSet(viewsets.ModelViewSet):
     permission_classes =[IsAuthenticated,IsOwnerOrReadOnly]
     serializer_class = Postserializers
     queryset = Post.objects.filter(status=True)
-    filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['category', 'author','status']
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {
+        "author": ["exact","in"],
+        "category": ["exact","in"],
+  
+    }
     search_fields = ['=title', 'content']
+    ordering_fields = ['created_date']
+    pagination_class = CustomPagination
     
 class CategoryListModuleSet(viewsets.ModelViewSet):
     permission_classes =[IsAuthenticated]

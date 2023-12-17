@@ -20,8 +20,11 @@ class Postserializers(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(many=False,slug_field='name',queryset= Category.objects.all())
     class Meta:
         model = Post
-        fields = ["id","author","title","image","content","snippet","relative_url","absolute_urls","status","category"]
+        fields = ["id","author","title","image","content","snippet","relative_url",
+                  "absolute_urls","status","category","created_date"]
+        
         read_only_fields = ["author"]
+        
     def get_absolute_urls(self, obj):
         request = self.context.get('request')
         return request.build_absolute_uri(obj.pk)
