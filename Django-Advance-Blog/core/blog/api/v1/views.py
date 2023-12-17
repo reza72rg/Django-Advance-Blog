@@ -11,10 +11,10 @@ from rest_framework.generics import GenericAPIView, ListAPIView \
        , RetrieveUpdateDestroyAPIView
 from rest_framework import mixins
 from rest_framework import viewsets
-
+from .permissions import IsOwnerOrReadOnly
 
 class PostListModuleSet(viewsets.ModelViewSet):
-    permission_classes =[IsAuthenticated]
+    permission_classes =[IsAuthenticated,IsOwnerOrReadOnly]
     serializer_class = Postserializers
     queryset = Post.objects.filter(status=True)
     
