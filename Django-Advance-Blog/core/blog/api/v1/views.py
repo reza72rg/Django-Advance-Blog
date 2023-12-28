@@ -20,6 +20,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 class PostListModuleSet(viewsets.ModelViewSet):
     permission_classes =[IsAuthenticated,IsOwnerOrReadOnly]
     serializer_class = Postserializers
+    
     queryset = Post.objects.filter(status=True)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {
