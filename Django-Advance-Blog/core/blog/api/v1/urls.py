@@ -1,18 +1,20 @@
-from django.urls import path,include
-from .views import * 
+from django.urls import path, include
+from . import views
 from rest_framework.routers import DefaultRouter
 
+app_name = "api-v1"
+
 router = DefaultRouter()
-router.register('post', PostListModuleSet, basename='post')
-router.register('category', CategoryListModuleSet, basename='category')
+router.register("post", views.PostModelViewSet, basename="post")
+router.register("category", views.CategoryModelViewSet, basename="category")
 urlpatterns = router.urls
 
-app_name = 'api-v1'
-'''
-urlpatterns = [
-    # path('post/',PostList.as_view(), name ='post-list'),
-    # path('post/<int:pk>/',PostDetail.as_view(), name ='post-detail'),
-    path('post/',PostListViewSet.as_view({'get':'list','post':'create'}), name ='post-list'),
-    path('post/<int:pk>/',PostListViewSet.as_view({'get':'retrieve','put':'update','patch':'partial_update','delete':'destroy'}), name ='post-detail'),
-    
-]'''
+
+# urlpatterns = [
+#     # path('post/',views.postList,name="post-list"),
+#     # path('post/<int:id>/',views.postDetail,name="post-detail"),
+#     # path('post/',views.PostList.as_view(),name="post-list"),
+#     # path('post/<int:pk>/',views.PostDetail.as_view(),name="post-detail"),
+#     path('post/',views.PostViewSet.as_view({'get':'list','post':'create'}),name='post-list'),
+#     path('post/<int:pk>/',views.PostViewSet.as_view({'get':'retrieve','put':'update','patch':'partial_update','delete':'destroy'}),name="post-detail"),
+# ]
